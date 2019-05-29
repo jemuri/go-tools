@@ -2,8 +2,6 @@ package dislock
 
 import (
 	"encoding/base64"
-	"fmt"
-	"github.com/Guazi-inc/etcd-tool/config"
 	"strconv"
 	"sync"
 	"time"
@@ -235,9 +233,5 @@ func ConnRedis() *redis.Client {
 //getEtcdValue 获取ETCD地址
 func getEtcdValue(path string) (string, error) {
 	var addArr string
-	err := config.Get(path, &addArr)
-	if err != nil {
-		return "", fmt.Errorf("aegis-kafka-getEtcdValue-path: %s ,error: %+v", path, err)
-	}
 	return addArr, nil
 }

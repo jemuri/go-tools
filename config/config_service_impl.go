@@ -5,14 +5,12 @@ import (
 	"fmt"
 	"github.com/BurntSushi/toml"
 	"github.com/PaesslerAG/jsonpath"
-	"os"
 	"strings"
 	"sync"
 )
 
 const (
-	GuaZiEnv   = "GUAZI_ENV" //Attention
-	TomlSuffix = ".toml"
+
 	ErrEmptyConfPath = "config path is null!"
 )
 
@@ -22,14 +20,7 @@ var (
 	confPath string
 )
 
-// Init .
-func Init(path string) {
-	if strings.HasSuffix(path, TomlSuffix) {
-		path = strings.Replace(path, TomlSuffix, fmt.Sprintf("_%s%s", os.Getenv(GuaZiEnv), TomlSuffix), 1)
-	}
-	confPath = path
-	once.Do(loadConfigToml)
-}
+
 
 // Get .
 func Get(key string) (interface{}, error) {

@@ -2,14 +2,30 @@ package config
 
 import (
 	"fmt"
+	"os"
+	"strings"
 )
 
 const (
-	Empty    = ""
-	Endpoint = "endpoint"
-	AppKey   = "app_key"
-	Secret   = "secret"
+	Empty      = ""
+	Endpoint   = "endpoint"
+	AppKey     = "app_key"
+	Secret     = "secret"
+	TomlSuffix = ".toml"
 )
+
+// Init .
+func Init(path, confEnv string) {
+	if strings.HasSuffix(path, TomlSuffix) {
+		conf := os.Getenv(confEnv)
+		if conf == "" {
+			panic("Please setting the conf env!!!")
+		}
+		path = strings.Replace(path, TomlSuffix, fmt.Sprintf("_%s%s", conf, TomlSuffix), 1)
+	}
+	confPath = path
+	once.Do(loadConfigToml)
+}
 
 // CertainString 确认必定返回有效string
 func CertainString(key string) string {
