@@ -25,7 +25,7 @@ const (
 	// ProjectKey ProjectKey
 	ProjectKey = "project"
 	// DefaultEnv DefaultEnv
-	DefaultEnv = "aegis-c2c"
+	DefaultEnv = "EmptyProject"
 )
 
 //LoggerInit 初始化日志记录器
@@ -41,6 +41,32 @@ func LoggerInit(ctx context.Context, args map[string]interface{}) context.Contex
 	args[ProjectKey] = getEnvProject()               //项目应用部署名称,再也不用担心重新部署后找不到日志了
 	entry = entry.WithFields(logrus.Fields(args))    //将业务线标示信息(eg.apply_id)埋入该日志记录器中
 	entry.Logger.Formatter = &logrus.JSONFormatter{} //日志实例处 设置  才生效
+
+	return context.WithValue(ctx, EntryInstance, entry)
+}
+
+//LoggerInit 初始化日志记录器
+func LogInit(ctx context.Context, args map[string]interface{}) context.Context {
+	if ctx == nil {
+		panic("No context")
+	}
+	entry, isOK := ctx.Value(EntryInstance).(*logrus.Entry) //从context中获取log
+	if !isOK {
+		entry = logrus.NewEntry(logrus.New()) //取不到时创建一个新的entry日志记录器
+	}
+	args[FuncNameKey] = getFuncName()             //获取gRPC接口名称
+	args[ProjectKey] = getEnvProject()            //项目应用部署名称,再也不用担心重新部署后找不到日志了
+	entry = entry.WithFields(logrus.Fields(args)) //将业务线标示信息(eg.apply_id)埋入该日志记录器中
+
+	formatter := &logrus.TextFormatter{
+		FieldMap: logrus.FieldMap{
+			logrus.FieldKeyTime:  "@timestamp",
+			logrus.FieldKeyLevel: "@level",
+			logrus.FieldKeyMsg:   "@message",
+		},
+		DisableSorting:true,
+	}
+	entry.Logger.Formatter = formatter //日志实例处 设置  才生效
 
 	return context.WithValue(ctx, EntryInstance, entry)
 }
