@@ -59,12 +59,12 @@ func LogInit(ctx context.Context, args map[string]interface{}) context.Context {
 	entry = entry.WithFields(logrus.Fields(args)) //将业务线标示信息(eg.apply_id)埋入该日志记录器中
 
 	formatter := &logrus.TextFormatter{
-		FieldMap: logrus.FieldMap{
-			logrus.FieldKeyTime:  "@timestamp",
-			logrus.FieldKeyLevel: "@level",
-			logrus.FieldKeyMsg:   "@message",
-		},
-		DisableSorting:true,
+		//FieldMap: logrus.FieldMap{
+		//	logrus.FieldKeyTime:  "@timestamp",
+		//	logrus.FieldKeyLevel: "@level",
+		//	logrus.FieldKeyMsg:   "@message",
+		//},
+		//DisableSorting:true,
 	}
 	entry.Logger.Formatter = formatter //日志实例处 设置  才生效
 
