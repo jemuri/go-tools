@@ -92,9 +92,13 @@ func AddFields(ctx context.Context, args map[string]interface{}) context.Context
 	return context.WithValue(ctx, EntryInstance, entry)
 }
 
-//getLineNumber get line number
+//getLineNumber get file:line number
 func getLineNumber() string {
 	_, file, line, ok := runtime.Caller(2)
+
+	if arr := strings.Split(file, "/"); len(arr) > 0 {
+		file = arr[len(arr)-1]
+	}
 	if ok {
 		return fmt.Sprintf("%s:%d", file, line)
 	}
