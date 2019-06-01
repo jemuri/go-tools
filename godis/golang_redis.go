@@ -16,7 +16,7 @@ var onceDo sync.Once
 var pool *redis.Pool
 
 type RedisPool struct {
-	pool *redis.Pool
+	Pool *redis.Pool
 }
 
 // NewRedisPool NewRedisPool
@@ -30,7 +30,7 @@ func NewRedisPool() *RedisPool {
 	})
 
 	return &RedisPool{
-		pool: pool,
+		Pool: pool,
 	}
 }
 
@@ -43,7 +43,7 @@ func DialHandler() (redis.Conn, error) {
 }
 
 func (r *RedisPool) Get(key string) (string, error) {
-	c := r.pool.Get()
+	c := r.Pool.Get()
 	defer closeConn(c)
 
 	return redis.String(c.Do("GET", key))
@@ -58,7 +58,7 @@ func (r *RedisPool) Get(key string) (string, error) {
 // SET mykey "redis" EX 60 NX
 // 以上示例将在键“mykey”不存在时，设置键的值，到期时间为60秒
 func (r *RedisPool) Set(key string, value interface{}) error {
-	c := r.pool.Get()
+	c := r.Pool.Get()
 	defer closeConn(c)
 
 	_, err := c.Do("SET", key, value)
@@ -66,7 +66,7 @@ func (r *RedisPool) Set(key string, value interface{}) error {
 }
 
 func (r *RedisPool) SetEX(key string, value interface{}, seconds int64) error {
-	c := r.pool.Get()
+	c := r.Pool.Get()
 	defer closeConn(c)
 
 	_, err := c.Do("SET", key, value, "EX", seconds)
@@ -74,7 +74,7 @@ func (r *RedisPool) SetEX(key string, value interface{}, seconds int64) error {
 	return err
 }
 func (r *RedisPool) SetNX(key string, value interface{}, seconds int64) error {
-	c := r.pool.Get()
+	c := r.Pool.Get()
 	defer closeConn(c)
 
 	var err error
@@ -88,7 +88,7 @@ func (r *RedisPool) SetNX(key string, value interface{}, seconds int64) error {
 }
 
 func (r *RedisPool) Del(key string) error {
-	c := r.pool.Get()
+	c := r.Pool.Get()
 	defer closeConn(c)
 
 	_, err := c.Do("DEL", key)
