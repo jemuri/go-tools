@@ -7,7 +7,6 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
-	db2 "gitlab.com/codersongsong/master/consts/dbconst"
 )
 
 
@@ -147,7 +146,7 @@ func CallbackExplain(scope *gorm.Scope) {
 //IsEmptyDB 如果不使用事务管理,不需要传递db参数
 func IsEmptyDB(db ...*gorm.DB) (*gorm.DB,error) {
 	if db == nil && len(db)==0{
-		dbNew, err := GetDB(db2.DatabaseName)
+		dbNew, err := GetDB("master")
 		if err != nil {
 			return nil,err
 		}
