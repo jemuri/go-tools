@@ -3,7 +3,7 @@ package godis
 import (
 	"fmt"
 	"github.com/gomodule/redigo/redis"
-	"golang.guazi-corp.com/finance/aegis-common/utils/config"
+	"github.com/jemuri/go-tools/config"
 	"sync"
 )
 
@@ -66,10 +66,10 @@ func (r *RedisPool) Get(key string) (string, error) {
 }
 
 func (r *RedisPool) GetInt64(key string) (int64, error) {
-	c:= r.Pool.Get()
-	defer  closeConn(c)
+	c := r.Pool.Get()
+	defer closeConn(c)
 
-	return redis.Int64(c.Do("GET",key))
+	return redis.Int64(c.Do("GET", key))
 }
 
 //在SET命令中，有很多选项可用来修改命令的行为。 以下是SET命令可用选项的基本语法
