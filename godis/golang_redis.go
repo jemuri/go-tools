@@ -3,13 +3,14 @@ package godis
 import (
 	"fmt"
 	"github.com/gomodule/redigo/redis"
+	"golang.guazi-corp.com/finance/aegis-common/utils/config"
 	"sync"
 )
 
 const (
-	NetWorkRedis  = "tcp"
-	AddressRedis  = "127.0.0.1:6379"
-	PasswordRedis = ""
+	NetWorkDefault  = "tcp"
+	AddressDefault  = "127.0.0.1:6379"
+	PasswordDefault = ""
 )
 
 var onceDo sync.Once
@@ -35,7 +36,22 @@ func NewRedisPool() *RedisPool {
 }
 
 func DialHandler() (redis.Conn, error) {
-	c, err := redis.Dial(NetWorkRedis, AddressRedis, redis.DialPassword(PasswordRedis))
+	network := config.CertainString("redis/network")
+	if network == "" {
+		network = NetWorkDefault
+	}
+
+	address := config.CertainString("redis/address")
+	if address == "" {
+		address = AddressDefault
+	}
+
+	password := config.CertainString("redis/password")
+	if password == "" {
+		password = PasswordDefault
+	}
+
+	c, err := redis.Dial(network, address, redis.DialPassword(password))
 	if err != nil {
 		return nil, err
 	}
