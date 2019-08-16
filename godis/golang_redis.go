@@ -58,6 +58,14 @@ func DialHandler() (redis.Conn, error) {
 	return c, nil
 }
 
+// Do 包装原生方法，隔离三方包引用，方便后期更换三方客户端
+func (r *RedisPool) Do(commandName string,key string, value interface{}) (interface{},error) {
+	c := r.Pool.Get()
+	defer closeConn(c)
+
+	return c.Do(commandName, key, value)
+}
+
 func (r *RedisPool) Get(key string) (string, error) {
 	c := r.Pool.Get()
 	defer closeConn(c)
