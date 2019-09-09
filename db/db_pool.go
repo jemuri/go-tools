@@ -143,7 +143,7 @@ func CallbackExplain(scope *gorm.Scope) {
 	GormLog.DoExplain(duration, scope)
 }
 
-//IsEmptyDB 如果不使用事务管理,不需要传递db参数
+// deprecated IsEmptyDB 如果不使用事务管理,不需要传递db参数
 func IsEmptyDB(db ...*gorm.DB) (*gorm.DB,error) {
 	if db == nil && len(db)==0{
 		dbNew, err := GetDB("master")
