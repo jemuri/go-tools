@@ -9,8 +9,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-
-
 var (
 	connCache sync.Map
 	lock      sync.Mutex
@@ -120,7 +118,6 @@ func SetLogger(gormLog GormLogger) {
 	GormLog = gormLog
 }
 
-
 // CallbackInitTime 初始化查询时间
 func CallbackInitTime(scope *gorm.Scope) {
 	scope.Set("start_time", time.Now())
@@ -144,13 +141,13 @@ func CallbackExplain(scope *gorm.Scope) {
 }
 
 // deprecated IsEmptyDB 如果不使用事务管理,不需要传递db参数
-func IsEmptyDB(db ...*gorm.DB) (*gorm.DB,error) {
-	if db == nil && len(db)==0{
-		dbNew, err := GetDB("master")
+func IsEmptyDB(dbKey string, db ...*gorm.DB) (*gorm.DB, error) {
+	if len(db) == 0 {
+		dbNew, err := GetDB(dbKey)
 		if err != nil {
-			return nil,err
+			return nil, err
 		}
-		return dbNew,nil
+		return dbNew, nil
 	}
-	return db[0],nil
+	return db[0], nil
 }
