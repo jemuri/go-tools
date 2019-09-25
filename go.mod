@@ -12,8 +12,11 @@ require (
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/jinzhu/gorm v1.9.10
 	github.com/kr/pretty v0.1.0 // indirect
+	github.com/mailru/easyjson v0.7.0 // indirect
+	github.com/olivere/elastic v6.2.23+incompatible
 	github.com/onsi/ginkgo v1.8.0 // indirect
 	github.com/onsi/gomega v1.5.0 // indirect
+	github.com/pkg/errors v0.8.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2
 )
