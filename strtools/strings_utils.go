@@ -49,15 +49,37 @@ func UUID() string {
 }
 
 // ChineseConvert 简繁体转换
-func ChineseConvert(source, patternPath string) (string,error) {
+func ChineseConvert(source, patternPath string) (string, error) {
 
 	_, err := ioutil.ReadFile(patternPath)
 	if err != nil {
-		return "",fmt.Errorf("读取字体配置文件出错: %v",err)
+		return "", fmt.Errorf("读取字体配置文件出错: %v", err)
 	}
 
 	c := opencc.NewConverter(patternPath)
 	defer c.Close()
 
-	return c.Convert(source),nil
+	start := 0
+	count := 0
+	result := strings.Builder{}
+	for i := range source {
+
+		if count == 10000  {
+			subSource := source[start:i]
+
+			subBuilder := c.Convert(subSource)
+			result.WriteString(subBuilder)
+			start = i
+			count = 0
+		}
+		if  count != 10000 && i == len(source)-1 {
+			subSource := source[start:]
+			subBuilder := c.Convert(subSource)
+			result.WriteString(subBuilder)
+		}
+
+		count++
+	}
+
+	return result.String(), nil
 }

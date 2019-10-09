@@ -2,6 +2,8 @@ package strtools
 
 import (
 	"fmt"
+	"io/ioutil"
+	"os"
 	"testing"
 )
 
@@ -107,8 +109,8 @@ func TestChineseConvert(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			name:    "case1",
-			args:    args{
+			name: "case1",
+			args: args{
 				source:      fan,
 				patternPath: "/usr/local/Cellar/opencc/1.0.5/share/opencc/tw2sp.json",
 			},
@@ -118,15 +120,31 @@ func TestChineseConvert(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ChineseConvert(tt.args.source, tt.args.patternPath)
-			fmt.Print(got)
-			if (err != nil) != tt.wantErr {
-				t.Logf("ChineseConvert() error = %v, wantErr %v", err, tt.wantErr)
-				return
+			file, err := os.Open("/Users/songsong/dev/WebSpace/chinese-poetry-master/json/poet.song.0.json")
+			if err != nil {
+				t.Logf("出错了，Open: %v", err)
 			}
-			if got != tt.want {
-				t.Logf("ChineseConvert() = %v, want %v", got, tt.want)
+			bytes, err := ioutil.ReadAll(file)
+			if err != nil {
+				t.Logf("出错了，Open: %v", err)
+			}
+
+			fmt.Print("打印一个转过前的结果: ", string(bytes))
+			fmt.Println()
+			got, err := ChineseConvert(string(bytes), tt.args.patternPath)
+			fmt.Print("打印一个转过结果: ", got)
+			fmt.Println()
+			if (err != nil) != tt.wantErr {
+				//t.Logf("ChineseConvert() error = %v, wantErr %v", err, tt.wantErr)
+				return
 			}
 		})
 	}
+}
+
+func Test_unit(t *testing.T) {
+	s := `abcdef`
+	b := s[0:2]
+	c := s[2:5]
+	fmt.Println(b,"---",c)
 }
