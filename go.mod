@@ -19,4 +19,5 @@ require (
 	github.com/pkg/errors v0.8.0
 	github.com/satori/go.uuid v1.2.0
 	github.com/sirupsen/logrus v1.4.2
+	github.com/stevenyao/go-opencc v0.0.0-20161014062826-cc376a51b65e
 )
