@@ -3,10 +3,7 @@ package strtools
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/satori/go.uuid"
-	"github.com/stevenyao/go-opencc"
-	"io/ioutil"
 	"strings"
 )
 
@@ -48,38 +45,11 @@ func UUID() string {
 	return strings.ReplaceAll(u.String(), "-", "")
 }
 
-// ChineseConvert 简繁体转换
-func ChineseConvert(source, patternPath string) (string, error) {
-
-	_, err := ioutil.ReadFile(patternPath)
-	if err != nil {
-		return "", fmt.Errorf("读取字体配置文件出错: %v", err)
-	}
-
-	c := opencc.NewConverter(patternPath)
-	defer c.Close()
-
-	start := 0
-	count := 0
-	result := strings.Builder{}
-	for i := range source {
-
-		if count == 10000  {
-			subSource := source[start:i]
-
-			subBuilder := c.Convert(subSource)
-			result.WriteString(subBuilder)
-			start = i
-			count = 0
-		}
-		if  count != 10000 && i == len(source)-1 {
-			subSource := source[start:]
-			subBuilder := c.Convert(subSource)
-			result.WriteString(subBuilder)
-		}
-
-		count++
-	}
-
-	return result.String(), nil
-}
+// ChineseConvert 简繁体转换  github.com/stevenyao/go-opencc
+//func ChineseConvert(source, patternPath string) (string, error) {
+//
+//	c := opencc.NewConverter(patternPath)
+//	defer c.Close()
+//
+//	return c.Convert(source), nil
+//}

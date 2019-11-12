@@ -1,6 +1,7 @@
 package strtools
 
 import (
+	"encoding/binary"
 	"fmt"
 	"io/ioutil"
 	"os"
@@ -147,4 +148,18 @@ func Test_unit(t *testing.T) {
 	b := s[0:2]
 	c := s[2:5]
 	fmt.Println(b,"---",c)
+}
+
+func Test_Buf(t *testing.T) {
+	// 0000 0000 0000 0000   0000 0001 1111 1111
+	var testInt int32 = 256
+	fmt.Printf("%d use big endian: \n", testInt)
+	testBytes := make([]byte, 4)
+	binary.BigEndian.PutUint32(testBytes, uint32(testInt))
+	binary.BigEndian.PutUint32(testBytes, uint32(testInt))
+	fmt.Println("int32 to bytes:", testBytes)
+
+	convInt := binary.BigEndian.Uint32(testBytes)
+	fmt.Printf("bytes to int32: %d\n\n", convInt)
+
 }
