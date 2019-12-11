@@ -80,6 +80,13 @@ func (r *RedisPool) GetInt64(key string) (int64, error) {
 	return redis.Int64(c.Do("GET", key))
 }
 
+func (r *RedisPool) GetObj(key string) (interface{}, error) {
+	c := r.Pool.Get()
+	defer closeConn(c)
+
+	return c.Do("GET", key)
+}
+
 //在SET命令中，有很多选项可用来修改命令的行为。 以下是SET命令可用选项的基本语法
 //SET KEY VALUE [EX seconds] [PX milliseconds] [NX|XX]
 // EX seconds − 设置指定的到期时间(以秒为单位)。
