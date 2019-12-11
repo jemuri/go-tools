@@ -59,7 +59,7 @@ func DialHandler() (redis.Conn, error) {
 }
 
 // Do 包装原生方法，隔离三方包引用，方便后期更换三方客户端
-func (r *RedisPool) Do(commandName string,key string, value interface{}) (interface{},error) {
+func (r *RedisPool) Do(commandName string, key string, value interface{}) (interface{}, error) {
 	c := r.Pool.Get()
 	defer closeConn(c)
 
@@ -104,6 +104,16 @@ func (r *RedisPool) SetEX(key string, value interface{}, seconds int64) error {
 
 	return err
 }
+
+func (r *RedisPool) Sex(keyPrefix, key string, value interface{}, seconds int64) error {
+	c := r.Pool.Get()
+	defer closeConn(c)
+
+	_, err := c.Do("SET", keyPrefix+key, value, "EX", seconds)
+
+	return err
+}
+
 func (r *RedisPool) SetNX(key string, value interface{}, seconds int64) error {
 	c := r.Pool.Get()
 	defer closeConn(c)
