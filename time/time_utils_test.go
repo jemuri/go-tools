@@ -56,3 +56,31 @@ func TestMergeString(t *testing.T) {
 		})
 	}
 }
+
+func TestTime2Str(t *testing.T) {
+	type args struct {
+		unixTime int64
+		pattern  string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		{
+			name: "case1",
+			args: args{
+				unixTime: 154363456456,
+				pattern:  "MM-dd hh:mm",
+			},
+			want: "",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Time2Str(tt.args.unixTime, tt.args.pattern); got != tt.want {
+				t.Errorf("Time2Str() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

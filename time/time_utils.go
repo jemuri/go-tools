@@ -42,8 +42,48 @@ func NowTimeStr(format string) string {
 		timeStr = time.Now().Format("2006年01月02日 15时04分05秒")
 	case "时分秒":
 		timeStr = time.Now().Format("15时04分05秒")
+	case "MM-dd hh:mm":
+		timeStr = time.Now().Format("15时04分05秒")
 	default:
 		timeStr = time.Now().String()
+	}
+
+	return timeStr
+}
+
+// Time2Str 时间转字符串
+func Time2Str(unixTime int64, pattern string) string {
+	t := time.Unix(unixTime, 0)
+
+	var timeStr string
+
+	switch pattern {
+	case "yyyy-MM-dd":
+		timeStr = t.Format("2006-01-02")
+	case "yyyy/MM/dd":
+		timeStr = t.Format("2006/01/02")
+	case "yyyy-MM-dd hh:mm:ss":
+		timeStr = t.Format("2006-01-02 15:04:05")
+	case "hh:mm:ss":
+		timeStr = t.Format("15:04:05")
+	case "yyyy/MM/dd hh:mm:ss":
+		timeStr = t.Format("2006/01/02 15:04:05")
+	case "yyyyMMddhhmmss":
+		timeStr = t.Format("20060102150405")
+	case "年月日":
+		timeStr = t.Format("2006年01月02日")
+	case "年/月/日":
+		timeStr = t.Format("2006年/01月/02日")
+	case "年月日 时分秒":
+		timeStr = t.Format("2006年01月02日 15时04分05秒")
+	case "时分秒":
+		timeStr = t.Format("15时04分05秒")
+	case "yy-MM-dd hh:mm":
+		timeStr = t.Format("06-01-02 15:04")
+	case "MM-dd hh:mm":
+		timeStr = t.Format("01-02 15:04")
+	default:
+		timeStr = t.String()
 	}
 
 	return timeStr
