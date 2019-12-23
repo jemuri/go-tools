@@ -66,6 +66,14 @@ func (r *RedisPool) Do(commandName string, key string, value interface{}) (inter
 	return c.Do(commandName, key, value)
 }
 
+// OriginDo 包装原生方法，隔离三方包引用，方便后期更换三方客户端
+func (r *RedisPool) OriginDo(commandName string, args ...interface{}) (interface{}, error) {
+	c := r.Pool.Get()
+	defer closeConn(c)
+
+	return c.Do(commandName, args)
+}
+
 func (r *RedisPool) Get(key string) (string, error) {
 	c := r.Pool.Get()
 	defer closeConn(c)
