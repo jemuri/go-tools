@@ -90,3 +90,10 @@ func TestLoggerInit(t *testing.T) {
 //	}
 //	wg.Done()
 //}
+
+func TestLogInit(t *testing.T) {
+	ctx := LogInit(context.Background(), map[string]interface{}{})
+	for i := 0; i < 100; i++ {
+		Infof(ctx, "[wing-TestLogInit]第: %d条", i)
+	}
+}

@@ -2,8 +2,8 @@ package log
 
 import (
 	"fmt"
-	"github.com/jemuri/go-tools/config"
 	"github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"sync"
 	"time"
@@ -12,11 +12,11 @@ import (
 var file *os.File
 var onceDo sync.Once
 
-func obtainFile() *os.File {
+func obtainFile(logPath string) *os.File {
 	if file == nil {
 		// 读取一次文件 提高性能
 		onceDo.Do(func() {
-			name := fmt.Sprintf(config.CertainString("log/file"), time.Now().Format("2006_01_02"))
+			name := fmt.Sprintf(logPath, time.Now().Format("2006_01_02"))
 			var err error
 			if file, err = os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE|os.O_SYNC, 0600); err != nil {
 				fmt.Println("打开日志文件出错: ", err)
@@ -34,15 +34,16 @@ type FileHook struct {
 }
 
 // NewFileHook 日志文件
-func NewFileHook(logPath string, file *os.File) *FileHook {
+func NewFileHook(logPath string) *FileHook {
 	if file == nil {
-		file = obtainFile()
+		file = obtainFile(logPath)
 	}
 	return &FileHook{file, logPath}
 }
 
 func (hook *FileHook) Fire(entry *logrus.Entry) error {
-	entry.Logger.SetOutput(hook.Writer)
+	writer := io.MultiWriter(hook.Writer, os.Stdout)
+	entry.Logger.SetOutput(writer)
 
 	return nil
 }
