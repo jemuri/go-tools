@@ -45,7 +45,7 @@ func LoggerInit(ctx context.Context, args map[string]interface{}) context.Contex
 
 	logLevel, _ := logrus.ParseLevel(config.CertainString("log/level"))
 	entry.Logger.SetLevel(logLevel) // 日志级别
-	entry.Logger.SetOutput(io.MultiWriter(obtainFile(config.CertainString("log/file")), os.Stdout))
+	entry.Logger.SetOutput(io.MultiWriter(obtainFile(), os.Stdout))
 
 	return context.WithValue(ctx, EntryInstance, entry)
 }
