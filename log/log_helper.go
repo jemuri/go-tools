@@ -2,12 +2,14 @@ package log
 
 import (
 	"context"
-	"os"
-
 	"fmt"
+	"github.com/jemuri/go-tools/config"
 	"github.com/sirupsen/logrus"
+	"os"
 	"runtime"
 	"strings"
+	"sync"
+	"time"
 )
 
 //ExistObj ExistObj
@@ -28,6 +30,24 @@ const (
 	DefaultEnv = "EmptyProject"
 )
 
+var file *os.File
+var onceDo sync.Once
+
+func obtainFile() *os.File {
+	if file == nil {
+		// 读取一次文件 提高性能
+		onceDo.Do(func() {
+			name := fmt.Sprintf(config.CertainString("log/file"), time.Now().Format("2006_01_02"))
+			var err error
+			if file, err = os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE|os.O_SYNC, 0600); err != nil {
+				panic(err)
+			}
+		})
+	}
+
+	return file
+}
+
 //LoggerInit 初始化日志记录器
 func LoggerInit(ctx context.Context, args map[string]interface{}) context.Context {
 	if ctx == nil {
@@ -41,6 +61,10 @@ func LoggerInit(ctx context.Context, args map[string]interface{}) context.Contex
 	args[ProjectKey] = getEnvProject()               //项目应用部署名称,再也不用担心重新部署后找不到日志了
 	entry = entry.WithFields(logrus.Fields(args))    //将业务线标示信息(eg.apply_id)埋入该日志记录器中
 	entry.Logger.Formatter = &logrus.JSONFormatter{} //日志实例处 设置  才生效
+
+	logLevel, _ := logrus.ParseLevel(config.CertainString("log/level"))
+	entry.Logger.SetLevel(logLevel)      // 日志级别
+	entry.Logger.SetOutput(obtainFile()) // 日志输出到文件
 
 	return context.WithValue(ctx, EntryInstance, entry)
 }
@@ -67,6 +91,9 @@ func LogInit(ctx context.Context, args map[string]interface{}) context.Context {
 		//DisableSorting:true,
 	}
 	entry.Logger.Formatter = formatter //日志实例处 设置  才生效
+	logLevel, _ := logrus.ParseLevel(config.CertainString("log/level"))
+	entry.Logger.SetLevel(logLevel)      // 日志级别
+	entry.Logger.SetOutput(obtainFile()) // 日志输出到文件
 
 	return context.WithValue(ctx, EntryInstance, entry)
 }
