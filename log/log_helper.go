@@ -45,7 +45,9 @@ func LoggerInit(ctx context.Context, args map[string]interface{}) context.Contex
 
 	logLevel, _ := logrus.ParseLevel(config.CertainString("log/level"))
 	entry.Logger.SetLevel(logLevel) // 日志级别
-	entry.Logger.SetOutput(io.MultiWriter(obtainFile(), os.Stdout))
+	if logLevel == logrus.DebugLevel {
+		entry.Logger.SetOutput(io.MultiWriter(obtainFile(), os.Stdout))
+	}
 
 	return context.WithValue(ctx, EntryInstance, entry)
 }
@@ -74,7 +76,7 @@ func LogInit(ctx context.Context, args map[string]interface{}) context.Context {
 	entry.Logger.Formatter = formatter //日志实例处 设置  才生效
 	logLevel, _ := logrus.ParseLevel(config.CertainString("log/level"))
 	entry.Logger.SetLevel(logLevel) // 日志级别
-	entry.Logger.SetOutput(io.MultiWriter(obtainFile(config.CertainString("log/file")), os.Stdout))
+	entry.Logger.SetOutput(io.MultiWriter(obtainFile(), os.Stdout))
 
 	return context.WithValue(ctx, EntryInstance, entry)
 }
