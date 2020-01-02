@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/jemuri/go-tools/config"
+	"github.com/jemuri/go-tools/strtools"
 	"github.com/sirupsen/logrus"
 	"io"
 	"os"
@@ -27,6 +28,8 @@ const (
 	ProjectKey = "project"
 	// DefaultEnv DefaultEnv
 	DefaultEnv = "EmptyProject"
+	// TraceID 日志链路跟踪
+	TraceID = "trace_id"
 )
 
 //LoggerInit 初始化日志记录器
@@ -40,6 +43,7 @@ func LoggerInit(ctx context.Context, args map[string]interface{}) context.Contex
 	}
 	args[FuncNameKey] = getFuncName()                //获取gRPC接口名称
 	args[ProjectKey] = getEnvProject()               //项目应用部署名称,再也不用担心重新部署后找不到日志了
+	args[TraceID] = strtools.UUID()
 	entry = entry.WithFields(args)                   //将业务线标示信息(eg.apply_id)埋入该日志记录器中
 	entry.Logger.Formatter = &logrus.JSONFormatter{} //日志实例处 设置  才生效
 
@@ -63,6 +67,7 @@ func LogInit(ctx context.Context, args map[string]interface{}) context.Context {
 	}
 	args[FuncNameKey] = getFuncName()  //获取gRPC接口名称
 	args[ProjectKey] = getEnvProject() //项目应用部署名称,再也不用担心重新部署后找不到日志了
+	args[TraceID] = strtools.UUID()
 	entry = entry.WithFields(args)     //将业务线标示信息(eg.apply_id)埋入该日志记录器中
 
 	formatter := &logrus.TextFormatter{
