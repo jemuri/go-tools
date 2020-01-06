@@ -2,8 +2,11 @@ package log
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestLoggerInit(t *testing.T) {
@@ -96,4 +99,20 @@ func TestLogInit(t *testing.T) {
 	for i := 0; i < 100; i++ {
 		Infof(ctx, "[wing-TestLogInit]第: %d条", i)
 	}
+}
+
+func TestCase1(t *testing.T) {
+	name := fmt.Sprintf("file_%s.log", time.Now().Format("2006_01_02"))
+	var err error
+	//var flag int
+	//if _, err := os.Stat(name); os.IsNotExist(err) {
+	//	flag = os.O_WRONLY | os.O_APPEND | os.O_CREATE | os.O_EXCL | os.O_SYNC
+	//} else if os.IsExist(err) {
+	//	flag = os.O_WRONLY | os.O_APPEND | os.O_SYNC
+	//}
+
+	if file, err = os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE|os.O_SYNC, 0755); err != nil {
+		fmt.Println("打开日志文件出错: ", err)
+	}
+	fmt.Println("end")
 }
