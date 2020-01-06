@@ -41,8 +41,8 @@ func LoggerInit(ctx context.Context, args map[string]interface{}) context.Contex
 	if !isOK {
 		entry = logrus.NewEntry(logrus.New()) //取不到时创建一个新的entry日志记录器
 	}
-	args[FuncNameKey] = getFuncName()                //获取gRPC接口名称
-	args[ProjectKey] = getEnvProject()               //项目应用部署名称,再也不用担心重新部署后找不到日志了
+	args[FuncNameKey] = getFuncName()  //获取gRPC接口名称
+	args[ProjectKey] = getEnvProject() //项目应用部署名称,再也不用担心重新部署后找不到日志了
 	args[TraceID] = strtools.UUID()
 	entry = entry.WithFields(args)                   //将业务线标示信息(eg.apply_id)埋入该日志记录器中
 	entry.Logger.Formatter = &logrus.JSONFormatter{} //日志实例处 设置  才生效
@@ -50,7 +50,7 @@ func LoggerInit(ctx context.Context, args map[string]interface{}) context.Contex
 	logLevel, _ := logrus.ParseLevel(config.CertainString("log/level"))
 	entry.Logger.SetLevel(logLevel) // 日志级别
 	if logLevel == logrus.DebugLevel {
-		entry.Logger.SetOutput(io.MultiWriter(obtainFile(), os.Stdout))
+		entry.Logger.SetOutput(io.MultiWriter(os.Stdout, obtainFile()))
 	}
 
 	return context.WithValue(ctx, EntryInstance, entry)
@@ -68,7 +68,7 @@ func LogInit(ctx context.Context, args map[string]interface{}) context.Context {
 	args[FuncNameKey] = getFuncName()  //获取gRPC接口名称
 	args[ProjectKey] = getEnvProject() //项目应用部署名称,再也不用担心重新部署后找不到日志了
 	args[TraceID] = strtools.UUID()
-	entry = entry.WithFields(args)     //将业务线标示信息(eg.apply_id)埋入该日志记录器中
+	entry = entry.WithFields(args) //将业务线标示信息(eg.apply_id)埋入该日志记录器中
 
 	formatter := &logrus.TextFormatter{
 		//FieldMap: logrus.FieldMap{
@@ -81,7 +81,7 @@ func LogInit(ctx context.Context, args map[string]interface{}) context.Context {
 	entry.Logger.Formatter = formatter //日志实例处 设置  才生效
 	logLevel, _ := logrus.ParseLevel(config.CertainString("log/level"))
 	entry.Logger.SetLevel(logLevel) // 日志级别
-	entry.Logger.SetOutput(io.MultiWriter(obtainFile(), os.Stdout))
+	entry.Logger.SetOutput(io.MultiWriter(os.Stdout, obtainFile()))
 
 	return context.WithValue(ctx, EntryInstance, entry)
 }
