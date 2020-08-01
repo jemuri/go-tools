@@ -10,7 +10,6 @@ import (
 )
 
 const (
-
 	ErrEmptyConfPath = "config path is null!"
 )
 
@@ -19,8 +18,6 @@ var (
 	once     sync.Once
 	confPath string
 )
-
-
 
 // Get .
 func Get(key string) (interface{}, error) {
@@ -43,13 +40,13 @@ func convert(key string) string {
 
 func loadConfigToml() {
 	if confPath == "" {
-		fmt.Println(ErrEmptyConfPath)
-		panic(ErrEmptyConfPath)
+		fmt.Println("loadConfigTomlError: " + ErrEmptyConfPath)
+		return
 	}
 	_, err := toml.DecodeFile(confPath, &cfg)
 	if err != nil {
-		fmt.Println(fmt.Sprintf("DecodeFileError: %v", err))
-		panic(err)
+		fmt.Println(fmt.Sprintf("loadConfigToml-DecodeFileError: %v", err))
+		return
 	}
 	fmt.Println("loadConfigToml :", cfg)
 }
