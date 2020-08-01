@@ -32,7 +32,7 @@ func CertainString(key string) string {
 	value, err := Get(key)
 	if err != nil {
 		fmt.Println("LocalConfig: CertainString convert string err: ", err.Error())
-		return err.Error()
+		return ""
 	}
 
 	val, ok := value.(string)

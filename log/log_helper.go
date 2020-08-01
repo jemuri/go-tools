@@ -47,7 +47,11 @@ func LoggerInit(ctx context.Context, args map[string]interface{}) context.Contex
 	entry = entry.WithFields(args)                   //将业务线标示信息(eg.apply_id)埋入该日志记录器中
 	entry.Logger.Formatter = &logrus.JSONFormatter{} //日志实例处 设置  才生效
 
-	logLevel, _ := logrus.ParseLevel(config.CertainString("log/level"))
+	level := config.CertainString("log/level")
+	if level == "" {
+		level = "debug"
+	}
+	logLevel, _ := logrus.ParseLevel(level)
 	entry.Logger.SetLevel(logLevel) // 日志级别
 	if logLevel == logrus.DebugLevel {
 		entry.Logger.SetOutput(io.MultiWriter(os.Stdout, obtainFile()))
