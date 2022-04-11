@@ -7,11 +7,12 @@ import (
 )
 
 const (
-	Empty      = ""
-	Endpoint   = "endpoint"
-	AppKey     = "app_key"
-	Secret     = "secret"
-	TomlSuffix = ".toml"
+	Empty          = ""
+	ConfEnvDefault = "dev"
+	Endpoint       = "endpoint"
+	AppKey         = "app_key"
+	Secret         = "secret"
+	TomlSuffix     = ".toml"
 )
 
 // Init .
@@ -19,7 +20,8 @@ func Init(path, confEnv string) {
 	if strings.HasSuffix(path, TomlSuffix) {
 		conf := os.Getenv(confEnv)
 		if conf == "" {
-			panic("Please setting the conf env!!!")
+			fmt.Println("Please setting the conf env!!!")
+			conf = ConfEnvDefault
 		}
 		path = strings.Replace(path, TomlSuffix, fmt.Sprintf("_%s%s", conf, TomlSuffix), 1)
 	}

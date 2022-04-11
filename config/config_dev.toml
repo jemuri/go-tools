@@ -1,0 +1,60 @@
+db_dsn = "root:root@tcp(127.0.0.1:3306)/itodo?charset=utf8mb4&parseTime=True&loc=Local"
+
+[admin]
+port = "8087"
+
+[server]
+port = "8080"
+
+[redis]
+address = "127.0.0.1:6379"
+network = "tcp"
+password = ""
+
+
+[oss]
+bucket_name = "wingfilm-test"
+end_point = "oss-cn-beijing.aliyuncs.com"
+access_key_id = "LTAI4FdNd44QF2c18XzoBA8t"
+access_key_secret = "Yu7vBYDq7GqLReHFU3aPLcTZjVLfjO"
+img_proxy = "image.wedingtimes.com"
+
+[log]
+level = "debug"
+query_file = "logs/ying_text_%s.log"
+file = "logs/ying_json_%s.log"
+
+
+# This is a TOML document.
+
+title = "TOML Example"
+
+[owner]
+name = "Tom Preston-Werner"
+dob = 1979-05-27T07:32:00-08:00 # First class dates
+
+[database]
+server = "192.168.1.1"
+ports = [8001, 8001, 8002]
+connection_max = 5000
+enabled = true
+
+[servers]
+
+# Indentation (tabs and/or spaces) is allowed but not required
+[servers.alpha]
+ip = "10.0.0.1"
+dc = "eqdc10"
+
+[servers.beta]
+ip = "10.0.0.2"
+dc = "eqdc10"
+
+[clients]
+data = [["gamma", "delta"], [1, 2]]
+
+# Line breaks are OK when inside arrays
+hosts = [
+    "alpha",
+    "omega"
+]
