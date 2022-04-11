@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 	"github.com/BurntSushi/toml"
+	"io/ioutil"
 	"os"
 	"strings"
 )
@@ -21,17 +22,26 @@ func InitStruct(path, confEnv string, confStruct interface{}) {
 	once.Do(loadConfigToml2(confStruct))
 }
 
-func loadConfigToml2(conf interface{}) func() {
+func loadConfigToml2(confStruct interface{}) func() {
 	if confPath == "" {
 		fmt.Println("loadConfigTomlError: " + ErrEmptyConfPath)
 		return nil
 	}
 
-	_, err := toml.DecodeFile(confPath, &conf)
+	data, err := ioutil.ReadFile(confPath)
 	if err != nil {
-		fmt.Println(fmt.Sprintf("loadConfigToml-DecodeFileError: %v", err))
-		return nil
+		fmt.Println(fmt.Sprintf("loadConfigToml-ReadFileError: %v", err))
 	}
+	_, err = toml.Decode(string(data), confStruct)
+	if err != nil {
+		fmt.Println(fmt.Sprintf("loadConfigToml-toml.DecodeError: %v", err))
+	}
+
+	//_, err := toml.DecodeFile(confPath, &conf)
+	//if err != nil {
+	//	fmt.Println(fmt.Sprintf("loadConfigToml-DecodeFileError: %v", err))
+	//	return nil
+	//}
 	fmt.Println("loadConfigToml :", cfg)
 	return nil
 }
