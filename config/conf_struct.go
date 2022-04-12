@@ -9,9 +9,9 @@ import (
 )
 
 // InitStruct .
-func InitStruct(path, confEnv string, confStruct interface{}) {
+func InitStruct(path, env string, confStruct interface{}) {
 	if strings.HasSuffix(path, TomlSuffix) {
-		conf := os.Getenv(confEnv)
+		conf := os.Getenv(env)
 		if conf == "" {
 			fmt.Println("Please setting the conf env!!!")
 			conf = ConfEnvDefault
@@ -19,13 +19,13 @@ func InitStruct(path, confEnv string, confStruct interface{}) {
 		path = strings.Replace(path, TomlSuffix, fmt.Sprintf("_%s%s", conf, TomlSuffix), 1)
 	}
 	confPath = path
-	once.Do(loadConfigToml2(confStruct))
+	loadConfigToml2(confStruct)
 }
 
-func loadConfigToml2(confStruct interface{}) func() {
+func loadConfigToml2(confStruct interface{}) {
 	if confPath == "" {
 		fmt.Println("loadConfigTomlError: " + ErrEmptyConfPath)
-		return nil
+		return
 	}
 
 	data, err := ioutil.ReadFile(confPath)
@@ -37,11 +37,5 @@ func loadConfigToml2(confStruct interface{}) func() {
 		fmt.Println(fmt.Sprintf("loadConfigToml-toml.DecodeError: %v", err))
 	}
 
-	//_, err := toml.DecodeFile(confPath, &conf)
-	//if err != nil {
-	//	fmt.Println(fmt.Sprintf("loadConfigToml-DecodeFileError: %v", err))
-	//	return nil
-	//}
-	fmt.Println("loadConfigToml :", cfg)
-	return nil
+	fmt.Println("confStruct :", confStruct)
 }
