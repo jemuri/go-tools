@@ -17,7 +17,7 @@ func obtainFile() *os.File {
 	if file == nil {
 		// 读取一次文件 提高性能
 		onceDo.Do(func() {
-			name := fmt.Sprintf(config.CertainString("log/file"), time.Now().Format("2006_01_02"))
+			name := fmt.Sprintf(config.CertainString("log/file"), time.Now().Format("2006_01"))
 			var err error
 			if file, err = os.OpenFile(name, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666); err != nil {
 				//if file, err = os.OpenFile(name, os.O_WRONLY|os.O_APPEND|os.O_CREATE|os.O_SYNC, 0755); err != nil {
